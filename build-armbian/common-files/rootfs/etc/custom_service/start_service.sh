@@ -1,0 +1,22 @@
+#!/bin/bash
+#========================================================================================
+#
+# This file is licensed under the terms of the GNU General Public
+# License version 2. This program is licensed "as is" without any
+# warranty of any kind, whether express or implied.
+#
+# This file is a part of the Armbian for Amlogic TV Boxes
+# https://github.com/ophub/amlogic-s9xxx-armbian
+#
+# Function: Customize the startup script, adding content as needed
+# Dependent script: /etc/rc.local
+# File path: /etc/custom_service/start_service.sh
+#
+#========================================================================================
+
+# Start ssh service
+[[ -d "/var/run/sshd" ]] || mkdir -p -m0755 /var/run/sshd
+[[ -f "/etc/init.d/ssh" ]] && /etc/init.d/ssh start 2>/dev/null
+
+# Add custom log
+echo "[$(date +"%Y.%m.%d.%H%M")] Hello World..." >/tmp/ophub_start_service.log
