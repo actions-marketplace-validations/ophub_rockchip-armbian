@@ -5,8 +5,8 @@
 # License version 2. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 #
-# This file is a part of the Armbian for Amlogic TV Boxes
-# https://github.com/ophub/amlogic-s9xxx-armbian
+# This file is a part of the Armbian for rockchip boxes
+# https://github.com/ophub/rockchip-armbian
 #
 # Function: Customize the startup script, adding content as needed
 # Dependent script: /etc/rc.local
