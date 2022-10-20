@@ -44,7 +44,7 @@ on:
       kernel_config:
         description: "Set the path of kernel .config"
         required: false
-        default: "compile-kernel/tools/config"
+        default: "compile-kernel/config"
 
 env:
   TZ: America/New_York
