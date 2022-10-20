@@ -196,19 +196,19 @@ update_kernel() {
     cd ${tmp_path}
     echo -e "${STEPS} Start unpacking the kernel..."
 
-    # 01. For /boot five files
+    # Delete the current kernel files
     rm -f /boot/config-* /boot/initrd.img-* /boot/System.map-* /boot/uInitrd-* /boot/vmlinuz-* 2>/dev/null && sync
-    rm -f /boot/uInitrd /boot/Image 2>/dev/null && sync
-    #
+    rm -f /boot/uInitrd /boot/Image /boot/dtb* 2>/dev/null && sync
+
+    # 01. For /boot five files
     tar -xzf boot-${kernel_name}.tar.gz -C /boot && sync
     (cd /boot && ln -sf uInitrd-${kernel_name} uInitrd && ln -sf vmlinuz-${kernel_name} Image && sync)
     [[ "$(ls /boot/*${kernel_name}* -l 2>/dev/null | grep "^-" | wc -l)" -ge "4" ]] || error_msg "The /boot files is missing."
     echo -e "${INFO} (1/4) Unpacking [ boot-${kernel_name}.tar.gz ] done."
 
     # 02. For /boot/dtb/rockchip/*
-    mkdir -p /boot/dtb/rockchip
-    tar -xzf dtb-rockchip-${kernel_name}.tar.gz -C /boot/dtb/rockchip && sync
-    (cd /boot && ln -sf dtb dtb-${kernel_name} && sync)
+    mkdir -p /boot/dtb-${kernel_name}/rockchip && ln -sf dtb-${kernel_name} /boot/dtb
+    tar -xzf dtb-rockchip-${kernel_name}.tar.gz -C /boot/dtb-${kernel_name}/rockchip && sync
     [[ "$(ls /boot/dtb/rockchip -l 2>/dev/null | grep "^-" | wc -l)" -ge "10" ]] || error_msg "/boot/dtb/rockchip file is missing."
     echo -e "${INFO} (2/4) Unpacking [ dtb-rockchip-${kernel_name}.tar.gz ] done."
 
