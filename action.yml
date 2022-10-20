@@ -64,6 +64,7 @@ runs:
             [[ "${down_file:0-7}" == ".img.gz" ]] && gzip -df ${down_file} 2>/dev/null && sync
             [[ "${down_file:0-7}" == ".img.xz" ]] && xz -d ${down_file} 2>/dev/null && sync
             [[ "${down_file:0-4}" == ".zip" ]] && unzip -o ${down_file} 2>/dev/null && sync
+            mv *.img tmp.img 2>/dev/null
             echo -e "Armbian file: \n$(ls -l *.img 2>/dev/null)"
 
         cd ${GITHUB_ACTION_PATH}
