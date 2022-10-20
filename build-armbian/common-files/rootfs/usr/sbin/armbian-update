@@ -198,7 +198,7 @@ update_kernel() {
 
     # Delete the current kernel files
     rm -f /boot/config-* /boot/initrd.img-* /boot/System.map-* /boot/uInitrd-* /boot/vmlinuz-* 2>/dev/null && sync
-    rm -f /boot/uInitrd /boot/Image /boot/dtb* 2>/dev/null && sync
+    rm -rf /boot/uInitrd /boot/Image /boot/dtb* 2>/dev/null && sync
 
     # 01. For /boot five files
     tar -xzf boot-${kernel_name}.tar.gz -C /boot && sync
