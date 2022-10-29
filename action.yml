@@ -17,7 +17,7 @@ inputs:
   version_branch:
     description: "Set kernel branch."
     required: false
-    default: "rock5b"
+    default: "rk3588"
   auto_kernel:
     description: "Auto use the latest kernel."
     required: false

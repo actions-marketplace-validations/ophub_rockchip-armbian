@@ -34,8 +34,8 @@ tmp_path="${PWD}"
 # Set the kernel download repository
 kernel_repo="https://github.com/ophub/kernel/tree/main/pub"
 # Set default kernel branch
-kernel_branch=("rock5b" "dev")
-version_branch="rock5b"
+kernel_branch=("rk3588" "dev")
+version_branch="rk3588"
 # Set the release check file
 ophub_release_file="/etc/ophub-release"
 #
