@@ -1,10 +1,10 @@
 #==========================================================================
-# Description: Compile the kernel
+# Description: Compile the kernel for rk3588
 # Copyright (C) 2021 https://github.com/unifreq/openwrt_packit
 # Copyright (C) 2021 https://github.com/ophub/rockchip-armbian
 #==========================================================================
 
-name: Compile the kernel
+name: Compile the kernel for rk3588
 
 on:
   repository_dispatch:
@@ -13,25 +13,17 @@ on:
       kernel_repo:
         description: "Select the kernel repository"
         required: false
-        default: "unifreq"
+        default: "unifreq/linux-rock5b"
         type: choice
         options:
-          - unifreq
-          - kernel.org
+          - unifreq/linux-rock5b
       kernel_version:
         description: "Select kernel version"
         required: false
-        default: "5.10.150_5.15.75"
+        default: "5.10.150"
         type: choice
         options:
-          - 5.4.210_5.10.150_5.15.75
-          - 5.4.210_5.10.150
-          - 5.10.150_5.15.75
-          - 5.15.75_6.0.5
-          - 5.4.210
           - 5.10.150
-          - 5.15.75
-          - 6.0.5
       kernel_auto:
         description: "Auto use the latest kernel"
         required: false
@@ -52,7 +44,7 @@ on:
       kernel_config:
         description: "Set the path of kernel .config"
         required: false
-        default: ""
+        default: "compile-kernel/config"
 
 env:
   TZ: America/New_York
@@ -95,11 +87,11 @@ jobs:
         uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
-          tag: kernel_${{ env.PACKAGED_OUTPUTTAGS }}
+          tag: kernel_rk3588_${{ env.PACKAGED_OUTPUTTAGS }}
           artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
           allowUpdates: true
           token: ${{ secrets.GH_TOKEN }}
           body: |
             The kernel can be used to compile Armbian and OpenWrt.
-            The kernel cannot be used for rk3588 series devices.
+            The kernel is only applicable to devices of the rk3588 series.
             The kernel source code comes from: ${{ github.event.inputs.kernel_repo }}
