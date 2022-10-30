@@ -16,7 +16,7 @@
 #
 # Command: armbian-update
 # Command optional parameters: armbian-update <kernel_version> <version_branch>
-# Example: armbian-update 5.10.100 rock5b
+# Example: armbian-update 5.10.100 rk3588
 #
 #========================================= Functions list =========================================
 #
@@ -34,8 +34,7 @@ tmp_path="${PWD}"
 # Set the kernel download repository
 kernel_repo="https://github.com/ophub/kernel/tree/main/pub"
 # Set default kernel branch
-kernel_branch=("rk3588" "dev")
-version_branch="rk3588"
+version_branch=("stable" "rk3588" "dev")
 # Set the release check file
 ophub_release_file="/etc/ophub-release"
 #
@@ -76,16 +75,24 @@ init_var() {
     cd ${tmp_path}
     echo -e "${STEPS} Start initializing the environment..."
 
+    # Check release file
+    if [[ -f "${ophub_release_file}" ]]; then
+        source "${ophub_release_file}" 2>/dev/null
+        KERNEL_BRANCH="${KERNEL_BRANCH}"
+    else
+        error_msg "${ophub_release_file} file is missing!"
+    fi
+
     # Specify the kernel, such as: 5.10.70
     [[ -n "${1}" ]] && inputs_kernel="${1}"
 
     # Specify version branch, such as: stable
-    [[ -n "${2}" && -n "$(echo "${kernel_branch[@]}" | grep -w "${2}")" ]] && version_branch="${2}"
-    echo -e "${INFO} Use kernel branch: [ ${version_branch} ]"
+    [[ -n "${2}" && -n "$(echo "${version_branch[@]}" | grep -w "${2}")" ]] && KERNEL_BRANCH="${2}"
+    [[ -n "${KERNEL_BRANCH}" ]] && echo -e "${INFO} Use kernel branch: [ ${KERNEL_BRANCH} ]" || error_msg "Invalid kernel download directory!"
 
     # Convert kernel library address to svn format
     [[ "${kernel_repo}" == http* && -n "$(echo "${kernel_repo}" | grep "tree/main")" ]] && kernel_repo="${kernel_repo//tree\/main/trunk}"
-    kernel_repo="${kernel_repo}/${version_branch}"
+    kernel_repo="${kernel_repo}/${KERNEL_BRANCH}"
 
     # Convert kernel library address to API format
     kernel_api="${kernel_repo#*com\/}"
@@ -227,9 +234,8 @@ update_kernel() {
     echo -e "${INFO} (4/4) Unpacking [ modules-${kernel_name}.tar.gz ] done."
 
     # Update ophub_release_file
-    [[ -f "${ophub_release_file}" ]] && {
-        sed -i "s|^KERNEL_VERSION=.*|KERNEL_VERSION='${KERNEL_VERSION}'|g" ${ophub_release_file} 2>/dev/null
-    }
+    sed -i "s|^KERNEL_VERSION=.*|KERNEL_VERSION='${KERNEL_VERSION}'|g" ${ophub_release_file} 2>/dev/null
+    sed -i "s|^KERNEL_BRANCH=.*|KERNEL_BRANCH='${KERNEL_BRANCH}'|g" ${ophub_release_file} 2>/dev/null
 
     # Delete kernel tmpfiles
     rm -f *${kernel_name}*.tar.gz sha256sums 2>/dev/null
