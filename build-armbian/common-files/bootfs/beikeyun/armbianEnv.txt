@@ -4,4 +4,4 @@ rootdev=/dev/mmcblk0p2
 rootfstype=ext4
 extraargs=usbcore.autosuspend=-1
 extraboardargs=
-fdtfile=rockchip/rk3328-l1pro-1392mhz.dtb
+fdtfile=rockchip/rk3328-beikeyun-1296mhz.dtb
