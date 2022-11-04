@@ -15,7 +15,7 @@ Refer to the template [compile-kernel](../.github/workflows/compile-kernel.yml)
   uses: ophub/amlogic-s9xxx-armbian@main
   with:
     build_target: kernel
-    kernel_version: 5.10.125_5.15.50
+    kernel_version: 5.10.150_5.15.75
     kernel_auto: true
     kernel_sign: -yourname
 ```
@@ -32,7 +32,7 @@ Refer to the template [compile-kernel-rk3588](../.github/workflows/compile-kerne
   with:
     build_target: kernel
     kernel_repo: unifreq/linux-rock5b
-    kernel_version: 5.10.125_5.15.50
+    kernel_version: 5.10.150
     kernel_auto: true
     kernel_config: compile-kernel/config
     kernel_sign: -yourname

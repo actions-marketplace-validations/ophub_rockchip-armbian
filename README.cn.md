@@ -71,7 +71,7 @@ Armbian 固件的本地制作方法，使用 GitHub Actions 云编译的方法�
   uses: ophub/amlogic-s9xxx-armbian@main
   with:
     build_target: kernel
-    kernel_version: 5.10.125_5.15.50
+    kernel_version: 5.10.150_5.15.75
     kernel_auto: true
     kernel_sign: -yourname
 ```
