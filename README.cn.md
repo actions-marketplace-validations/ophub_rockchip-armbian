@@ -42,7 +42,7 @@ dd if=armbian.img  of=/dev/<your_device_name>  bs=1M conv=fsync
 armbian-update
 ```
 
-如果当前目录下有成套的内核文件，将使用当前目录的内核进行更新（更新需要的 4 个内核文件是 `header-xxx.tar.gz`, `boot-xxx.tar.gz`, `dtb-rockchip-xxx.tar.gz`, `modules-xxx.tar.gz`。其他内核文件不需要，如果同时存在也不影响更新，系统可以准确识别需要的内核文件）。如果当前目录没有内核文件，将从服务器查询并下载同系列的最新内核进行更新。你也可以查询[可选内核](https://github.com/ophub/kernel/tree/main/pub)版本（rk3588 和其他系列的内核不通用，须区分使用。如 rock5b 可以选择 rk3588 目录下的内核。r66s/r68s 可以选择 stable 目录下的内核），进行指定版本更新：`armbian-update 5.10.150 stable`。在设备支持的可选内核里可以自由更新，如从 5.10.150 内核更新为 5.15.75 内核。
+如果当前目录下有成套的内核文件，将使用当前目录的内核进行更新（更新需要的 4 个内核文件是 `header-xxx.tar.gz`, `boot-xxx.tar.gz`, `dtb-rockchip-xxx.tar.gz`, `modules-xxx.tar.gz`。其他内核文件不需要，如果同时存在也不影响更新，系统可以准确识别需要的内核文件）。如果当前目录没有内核文件，将从服务器查询并下载同系列的最新内核进行更新。你也可以查询[可选内核](https://github.com/ophub/kernel/tree/main/pub)版本（rk3588 和其他系列的内核不通用，须区分使用。如 rock5b 可以选择 rk3588 目录下的内核。贝壳云/我家云 可以选择 stable 目录下的内核），进行指定版本更新：`armbian-update 5.10.150 stable`。在设备支持的可选内核里可以自由更新，如从 5.10.150 内核更新为 5.15.75 内核。
 
 - ### 更多使用说明
 
