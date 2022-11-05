@@ -378,11 +378,13 @@ make_image() {
 
     # Set the type of file system
     if [[ "${ROOTFS_TYPE}" == "btrfs" ]]; then
-        uenv_mount_string="UUID=${ROOTFS_UUID}"
-        fstab_mount_string="defaults,noatime,compress=zstd:6"
+        uenv_rootdev="UUID=${ROOTFS_UUID}"
+        uenv_rootflags="compress=zstd:6"
+        fstab_string="defaults,noatime,compress=zstd:6"
     else
-        uenv_mount_string="UUID=${ROOTFS_UUID}"
-        fstab_mount_string="defaults,noatime,commit=600,errors=remount-ro"
+        uenv_rootdev="UUID=${ROOTFS_UUID}"
+        uenv_rootflags="rw,errors=remount-ro"
+        fstab_string="defaults,noatime,commit=600,errors=remount-ro"
     fi
 
     # Make armbian
@@ -479,24 +481,16 @@ refactor_files() {
     (cd ${tag_rootfs}/usr/lib/modules/${kernel_name}/ && rm -f build source 2>/dev/null && ln -sf /usr/src/${header_path} build)
     [[ "$(ls ${tag_rootfs}/usr/lib/modules/${kernel_name} -l 2>/dev/null | grep "^d" | wc -l)" -eq "1" ]] || error_msg "/usr/lib/modules kernel folder is missing."
 
-    # Set the type of file system
-    if [[ "${ROOTFS_TYPE}" == "btrfs" ]]; then
-        uenv_mount_string="UUID=${ROOTFS_UUID}"
-        fstab_mount_string="defaults,noatime,compress=zstd:6"
-    else
-        uenv_mount_string="UUID=${ROOTFS_UUID}"
-        fstab_mount_string="defaults,noatime,errors=remount-ro"
-    fi
-
     # Processing partition files: bootfs
     cd ${tag_bootfs}
 
     # Edit the armbianEnv.txt
     boot_conf_file="armbianEnv.txt"
     [[ -f "${boot_conf_file}" ]] || error_msg "The [ ${boot_conf_file} ] file does not exist."
-    sed -i "s|rootdev=.*|rootdev=${uenv_mount_string}|g" ${boot_conf_file}
-    sed -i "s|rootfstype=.*|rootfstype=${ROOTFS_TYPE}|g" ${boot_conf_file}
     sed -i "s|fdtfile.*|fdtfile=rockchip/${FDTFILE}|g" ${boot_conf_file}
+    sed -i "s|rootdev=.*|rootdev=${uenv_rootdev}|g" ${boot_conf_file}
+    sed -i "s|rootfstype=.*|rootfstype=${ROOTFS_TYPE}|g" ${boot_conf_file}
+    sed -i "s|rootflags.*|rootflags=${uenv_rootflags}|g" ${boot_conf_file}
 
     # Processing partition files: rootfs
     cd ${tag_rootfs}
@@ -555,8 +549,8 @@ refactor_files() {
 
     # Edit the etc/fstab
     [[ -f "etc/fstab" ]] || error_msg "The etc/fstab File does not exist."
-    sed -i "s|LABEL=ROOTFS.*|UUID=${ROOTFS_UUID}  /      ${ROOTFS_TYPE}  ${fstab_mount_string}  0 1|g" etc/fstab 2>/dev/null
-    sed -i "s|LABEL=BOOT.*|UUID=${BOOT_UUID}      /boot  ext4            defaults               0 2|g" etc/fstab 2>/dev/null
+    sed -i "s|LABEL=ROOTFS.*|UUID=${ROOTFS_UUID}  /      ${ROOTFS_TYPE}  ${fstab_string}  0 1|g" etc/fstab 2>/dev/null
+    sed -i "s|LABEL=BOOT.*|UUID=${BOOT_UUID}      /boot  ext4            defaults         0 2|g" etc/fstab 2>/dev/null
 
     # Custom banner name
     sed -i "s|BOARD_NAME=.*|BOARD_NAME=\"${soc}\"|g" ${armbian_release_file} 2>/dev/null
