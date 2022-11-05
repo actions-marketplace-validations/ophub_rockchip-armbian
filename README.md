@@ -10,8 +10,8 @@ The latest version of the Armbian firmware can be downloaded in [Releases](https
 
 | SoC  | Device | [Optional kernel](https://github.com/ophub/kernel/tree/main/pub) | Armbian Firmware |
 | ---- | ---- | ---- | ---- |
-| rk3588 | [Radxa-Rock5B](https://wiki.radxa.com/Rock5/5b) | [rk3588](https://github.com/ophub/kernel/tree/main/pub/rk3588) | [Releases](https://github.com/ophub/rockchip-armbian/releases) |
-| rk3328 | [beikeyun](https://www.cnblogs.com/milton/p/15391525.html), [l1pro](https://post.smzdm.com/p/a4wkdo7l/) | [stable](https://github.com/ophub/kernel/tree/main/pub/stable) | [Releases](https://github.com/ophub/rockchip-armbian/releases) |
+| rk3588 | [Radxa-Rock5B](https://wiki.radxa.com/Rock5/5b) | [rk3588](https://github.com/ophub/kernel/tree/main/pub/rk3588) | armbian_rockchip_rock5b.img |
+| rk3328 | [beikeyun](https://www.cnblogs.com/milton/p/15391525.html), [l1pro](https://post.smzdm.com/p/a4wkdo7l/) | [stable](https://github.com/ophub/kernel/tree/main/pub/stable) | armbian_rockchip_beikeyun.img <br />armbian_rockchip_l1pro.img |
 
 💡Tip: Find the firmware matching the device name in the download list. For example, the firmware of Radxa-Rock5B is Armian_x_rock5b_x.img.gz
 

@@ -10,8 +10,8 @@
 
 | 芯片  | 设备 | [可选内核](https://github.com/ophub/kernel/tree/main/pub) | Armbian 固件 |
 | ---- | ---- | ---- | ---- |
-| rk3588 | [Radxa-Rock5B](https://wiki.radxa.com/Rock5/5b) | [rk3588](https://github.com/ophub/kernel/tree/main/pub/rk3588) | [Releases](https://github.com/ophub/rockchip-armbian/releases) |
-| rk3328 | [beikeyun](https://www.cnblogs.com/milton/p/15391525.html), [l1pro](https://post.smzdm.com/p/a4wkdo7l/) | [stable](https://github.com/ophub/kernel/tree/main/pub/stable) | [Releases](https://github.com/ophub/rockchip-armbian/releases) |
+| rk3588 | [Radxa-Rock5B](https://wiki.radxa.com/Rock5/5b) | [rk3588](https://github.com/ophub/kernel/tree/main/pub/rk3588) | armbian_rockchip_rock5b.img |
+| rk3328 | [beikeyun](https://www.cnblogs.com/milton/p/15391525.html), [l1pro](https://post.smzdm.com/p/a4wkdo7l/) | [stable](https://github.com/ophub/kernel/tree/main/pub/stable) | armbian_rockchip_beikeyun.img <br />armbian_rockchip_l1pro.img |
 
 💡提示：在下载列表中查找与设备名称匹配的固件，如 Radxa-Rock5B 的固件是 Armbian_x_rock5b_x.img.gz
 
