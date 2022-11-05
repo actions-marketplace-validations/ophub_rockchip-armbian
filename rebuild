@@ -186,14 +186,14 @@ find_armbian() {
     [[ -n "${armbian_rebuild_name}" ]] || error_msg "The armbian original file does not exist: [ ${armbian_rebuild_file} ]"
 
     # Find armbian version info: such as [ 22.02.0 ]
-    armbian_rebuild_version="$(echo ${armbian_rebuild_name} | grep -oE '[2-9][0-9].[0-9]{1,2}.[0-9]{1,2}' | head -n 1)"
+    armbian_rebuild_version="$(echo ${armbian_rebuild_name} | grep -oE '[2-9][2-9]\.[0-9]{1,2}\.[0-9]{1,2}' | head -n 1)"
     [[ -n "${armbian_rebuild_version}" ]] || {
         armbian_rebuild_version="22.02.02"
         echo -e "${WARNING} Missing Armbian release version info!"
     }
 
     # Get the release kernel version
-    release_kernel="$(echo ${armbian_rebuild_name} | grep -oE '[5-9].[0-9]{1,2}.[0-9]{1,3}' | head -n 1)"
+    release_kernel="$(echo ${armbian_rebuild_name} | grep -oE '[5-9]\.[0-9]{1,2}\.[0-9]{1,3}' | head -n 1)"
     [[ -z "${release_kernel}" ]] && release_kernel="null" && echo -e "${WARNING} Missing Armbian kernel version info!"
 
     # Rename Img
@@ -261,7 +261,7 @@ download_kernel() {
             # Identify the kernel mainline
             MAIN_LINE="$(echo ${KERNEL_VAR} | awk -F '.' '{print $1"."$2}')"
             # Check the version on the server (e.g LATEST_VERSION="125")
-            LATEST_VERSION="$(curl -s "${server_kernel_url}/${vb}" | grep "name" | grep -oE "${MAIN_LINE}.[0-9]+" | sed -e "s/${MAIN_LINE}.//g" | sort -n | sed -n '$p')"
+            LATEST_VERSION="$(curl -s "${server_kernel_url}/${vb}" | grep "name" | grep -oE "${MAIN_LINE}\.[0-9]+" | sed -e "s/${MAIN_LINE}\.//g" | sort -n | sed -n '$p')"
             if [[ "${?}" -eq "0" && -n "${LATEST_VERSION}" ]]; then
                 tmp_arr_kernels[${i}]="${MAIN_LINE}.${LATEST_VERSION}"
             else
@@ -581,9 +581,8 @@ refactor_files() {
     # Enable ssh service
     ssh_config="etc/ssh/sshd_config"
     [[ -f "${ssh_config}" ]] && {
-        sed -i "s|^#Port.*|Port 22|g" ${ssh_config} 2>/dev/null
-        sed -i "s|^PermitRootLogin.*|PermitRootLogin yes|g" ${ssh_config} 2>/dev/null
-        sed -i "s|^#PermitRootLogin.*|PermitRootLogin yes|g" ${ssh_config} 2>/dev/null
+        sed -i "s|^#*Port .*|Port 22|g" ${ssh_config} 2>/dev/null
+        sed -i "s|^#*PermitRootLogin .*|PermitRootLogin yes|g" ${ssh_config} 2>/dev/null
     }
 }
 
