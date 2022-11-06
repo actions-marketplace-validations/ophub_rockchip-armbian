@@ -44,6 +44,7 @@ build_path="${make_path}/build-armbian"
 kernel_path="${build_path}/rockchip-kernel"
 uboot_path="${build_path}/u-boot"
 configfiles_path="${build_path}/common-files"
+rockchip_model_conf="${configfiles_path}/rootfs/etc/rockchip_model_database.conf"
 tmp_dir="${make_path}/tmp_dir"
 tmp_outpath="${tmp_dir}/tmp_out"
 tmp_armbian="${tmp_dir}/tmp_armbian"
@@ -302,30 +303,20 @@ download_kernel() {
 }
 
 confirm_version() {
-    # Confirm board branch
-    case "${board}" in
-    rock5b)
-        FDTFILE="rk3588-rock-5b.dtb"
-        BOOTLOADER_IMG="idbloader.img"
-        MAINLINE_UBOOT="u-boot.itb"
-        KERNEL_BRANCH="rk3588"
-        ;;
-    beikeyun)
-        FDTFILE="rk3328-beikeyun-1296mhz.dtb"
-        BOOTLOADER_IMG="btld-rk3328.bin"
-        MAINLINE_UBOOT=""
-        KERNEL_BRANCH="stable"
-        ;;
-    l1pro)
-        FDTFILE="rk3328-l1pro-1296mhz.dtb"
-        BOOTLOADER_IMG="btld-rk3328.bin"
-        MAINLINE_UBOOT=""
-        KERNEL_BRANCH="stable"
-        ;;
-    *)
-        error_msg "Have no this board: [ ${board} ]"
-        ;;
-    esac
+    cd ${make_path}
+
+    # Get ${board} config
+    [[ -f "${rockchip_model_conf}" ]] || error_msg "[ ${rockchip_model_conf} ] file is missing!"
+    board_conf="$(cat ${rockchip_model_conf} | sed -e 's/NA//g' -e 's/NULL//g' -e 's/[ ][ ]*//g' | grep -E "^[0-9]{1,3}:.*:${board}:yes$" | head -n 1)"
+    [[ -n "${board_conf}" ]] || error_msg "[ ${board} ] config is missing!"
+
+    # 1.ID  2.MODEL  3.SOC  4.FDTFILE  5.BOOTLOADER_IMG  6.MAINLINE_UBOOT  7.KERNEL_BRANCH  8.FAMILY  9.BOARD  10.BUILD
+    SOC="$(echo ${board_conf} | awk -F':' '{print $3}')"
+    FDTFILE="$(echo ${board_conf} | awk -F':' '{print $4}')"
+    BOOTLOADER_IMG="$(echo ${board_conf} | awk -F':' '{print $5}')"
+    MAINLINE_UBOOT="$(echo ${board_conf} | awk -F':' '{print $6}')"
+    KERNEL_BRANCH="$(echo ${board_conf} | awk -F':' '{print $7}')"
+    FAMILY="$(echo ${board_conf} | awk -F':' '{print $8}')"
 }
 
 extract_armbian() {
@@ -534,14 +525,15 @@ refactor_files() {
 
     # Add custom firmware information
     echo "PLATFORM='rockchip'" >>${ophub_release_file} 2>/dev/null
-    echo "VERSION_CODEID='${release_codeid}'" >>${ophub_release_file} 2>/dev/null
-    echo "VERSION_CODENAME='${release_codename}'" >>${ophub_release_file} 2>/dev/null
+    echo "SOC='${SOC}'" >>${ophub_release_file} 2>/dev/null
     echo "FDTFILE='${FDTFILE}'" >>${ophub_release_file} 2>/dev/null
     echo "BOOTLOADER_IMG='/usr/lib/u-boot/${BOOTLOADER_IMG}'" >>${ophub_release_file} 2>/dev/null
     echo "MAINLINE_UBOOT='/usr/lib/u-boot/${MAINLINE_UBOOT}'" >>${ophub_release_file} 2>/dev/null
+    echo "VERSION_CODEID='${release_codeid}'" >>${ophub_release_file} 2>/dev/null
+    echo "VERSION_CODENAME='${release_codename}'" >>${ophub_release_file} 2>/dev/null
     echo "KERNEL_VERSION='${kernel}'" >>${ophub_release_file} 2>/dev/null
     echo "KERNEL_BRANCH='${KERNEL_BRANCH}'" >>${ophub_release_file} 2>/dev/null
-    echo "SOC='${board}'" >>${ophub_release_file} 2>/dev/null
+    echo "FAMILY='${FAMILY}'" >>${ophub_release_file} 2>/dev/null
     echo "BOARD='${board}'" >>${ophub_release_file} 2>/dev/null
     echo "ROOTFS_TYPE='${ROOTFS_TYPE}'" >>${ophub_release_file} 2>/dev/null
     echo "BOOT_CONF='armbianEnv.txt'" >>${ophub_release_file} 2>/dev/null
