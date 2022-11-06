@@ -546,7 +546,7 @@ refactor_files() {
     sed -i "s|LABEL=BOOT.*|UUID=${BOOT_UUID}      /boot  ext4            defaults         0 2|g" etc/fstab 2>/dev/null
 
     # Custom banner name
-    sed -i "s|BOARD_NAME=.*|BOARD_NAME=\"${board}\"|g" ${armbian_release_file} 2>/dev/null
+    sed -i "s|BOARD_NAME=.*|BOARD_NAME=\"${SOC}\"|g" ${armbian_release_file} 2>/dev/null
 
     # Make the .bashrc take effect, Default shell settings file: /etc/default/useradd
     echo '[[ "${SHELL}" == *bash && -f "${HOME}/.bashrc" ]] && . ${HOME}/.bashrc' >>etc/profile
