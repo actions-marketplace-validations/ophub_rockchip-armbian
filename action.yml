@@ -6,8 +6,8 @@ inputs:
     description: "Set armbian original file path."
     required: false
     default: "build/output/images/*.img"
-  armbian_soc:
-    description: "Set rockchip SoC."
+  armbian_board:
+    description: "Set rockchip Board."
     required: false
     default: "rock5b"
   armbian_kernel:
@@ -65,7 +65,7 @@ runs:
         cd ${GITHUB_ACTION_PATH}
             echo -e "Start to rebuild armbian..."
             make_command=" -d"
-            [[ -n "${{ inputs.armbian_soc }}" ]] && make_command="${make_command} -b ${{ inputs.armbian_soc }}"
+            [[ -n "${{ inputs.armbian_board }}" ]] && make_command="${make_command} -b ${{ inputs.armbian_board }}"
             [[ -n "${{ inputs.armbian_kernel }}" ]] && make_command="${make_command} -k ${{ inputs.armbian_kernel }}"
             [[ -n "${{ inputs.auto_kernel }}" ]] && make_command="${make_command} -a ${{ inputs.auto_kernel }}"
             [[ -n "${{ inputs.armbian_size }}" ]] && make_command="${make_command} -s ${{ inputs.armbian_size }}"
