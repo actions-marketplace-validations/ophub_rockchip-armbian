@@ -305,7 +305,7 @@ download_kernel() {
 confirm_version() {
     cd ${make_path}
 
-    # Get ${board} config
+    # Find [ the first ] configuration information with [ the same BOARD name ] and [ BUILD as yes ] in the ${rockchip_model_conf} file.
     [[ -f "${rockchip_model_conf}" ]] || error_msg "[ ${rockchip_model_conf} ] file is missing!"
     board_conf="$(cat ${rockchip_model_conf} | sed -e 's/NA//g' -e 's/NULL//g' -e 's/[ ][ ]*//g' | grep -E "^[^#].*:${board}:yes$" | head -n 1)"
     [[ -n "${board_conf}" ]] || error_msg "[ ${board} ] config is missing!"
