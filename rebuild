@@ -193,14 +193,6 @@ find_armbian() {
         echo -e "${WARNING} Missing Armbian release version info!"
     }
 
-    # Get the release kernel version
-    release_kernel="$(echo ${armbian_rebuild_name} | grep -oE '[5-9]\.[0-9]{1,2}\.[0-9]{1,3}' | head -n 1)"
-    [[ -z "${release_kernel}" ]] && release_kernel="null" && echo -e "${WARNING} Missing Armbian kernel version info!"
-
-    # Rename Img
-    new_imgname="Tmp_${armbian_rebuild_version}-trunk_${release_kernel}.img"
-    mv -f ${armbian_outputpath}/${armbian_rebuild_name} ${armbian_outputpath}/${new_imgname} 2>/dev/null
-
     echo -e "${INFO} Armbian rebuild file: [ ${armbian_rebuild_name} ], Version: [ ${armbian_rebuild_version} ]"
 }
 
@@ -328,7 +320,7 @@ extract_armbian() {
 
     armbian_image_file="${tmp_aml_image}/armbian_${board}_${kernel}.img"
     rm -f ${armbian_image_file} 2>/dev/null
-    cp -f "${armbian_outputpath}/${new_imgname}" "${armbian_image_file}"
+    cp -f "${armbian_outputpath}/${armbian_rebuild_name}" "${armbian_image_file}"
 
     loop_old="$(losetup -P -f --show "${armbian_image_file}")"
     [[ -n "${loop_old}" ]] || error_msg "losetup ${armbian_image_file} failed."
