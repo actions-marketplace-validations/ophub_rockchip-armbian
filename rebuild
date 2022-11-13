@@ -23,6 +23,7 @@
 # init_var           : Initialize all variables
 # find_armbian       : Find Armbian file (build/output/images/*.img)
 # download_depends   : Download the dependency files
+# query_version      : Query the latest kernel version
 # download_kernel    : Download the latest kernel
 #
 # confirm_version    : Confirm version type
@@ -62,6 +63,8 @@ ophub_release_file="etc/ophub-release"
 script_repo="https://github.com/ophub/amlogic-s9xxx-armbian/tree/main/build-armbian/common-files"
 # Kernel files download repository
 kernel_repo="https://github.com/ophub/kernel/tree/main/pub"
+# Convert kernel library address to svn format
+kernel_repo="${kernel_repo//tree\/main/trunk}"
 version_branch=("stable" "rk3588")
 stable_kernel=("5.10.150" "5.15.75")
 rk3588_kernel=("5.10.150")
@@ -99,8 +102,6 @@ process_msg() {
 }
 
 init_var() {
-    cd ${make_path}
-
     # If it is followed by [ : ], it means that the option requires a parameter value
     get_all_ver="$(getopt "db:k:a:s:t:n:" "${@}")"
 
@@ -214,20 +215,12 @@ download_depends() {
     tmp_depends_dir="$(mktemp -d)"
     svn export ${script_repo}/rootfs/usr/sbin ${tmp_depends_dir} --force
     cp -f ${tmp_depends_dir}/{armbian-ddbr,armbian-docker,armbian-fix,armbian-software,armbian-swap,armbian-tf,balethirq.pl} \
-        ${configfiles_path}/rootfs/usr/sbin && sync
+        ${configfiles_path}/rootfs/usr/sbin
     chmod +x ${configfiles_path}/rootfs/usr/sbin/*
     rm -rf ${tmp_depends_dir} 2>/dev/null
 }
 
-download_kernel() {
-    cd ${make_path}
-
-    # Convert kernel library address to svn format
-    if [[ "${kernel_repo}" == http* && -n "$(echo ${kernel_repo} | grep "tree/main")" ]]; then
-        kernel_repo="${kernel_repo//tree\/main/trunk}"
-    fi
-    kernel_repo="${kernel_repo}"
-
+query_version() {
     # Convert kernel library address to API format
     server_kernel_url="${kernel_repo#*com\/}"
     server_kernel_url="${server_kernel_url//trunk/contents}"
@@ -236,62 +229,78 @@ download_kernel() {
     # Query the latest kernel in a loop
     x="1"
     for vb in ${version_branch[*]}; do
-
-        # Set empty array
-        tmp_arr_kernels=()
-
-        # Select the corresponding kernel directory and list
-        if [[ "${vb}" == "stable" ]]; then
-            down_kernel_list="${stable_kernel[*]}"
-        elif [[ "${vb}" == "rk3588" ]]; then
-            down_kernel_list="${rk3588_kernel[*]}"
-        fi
-
-        # Query the latest kernel in a loop
-        i="1"
-        for KERNEL_VAR in ${down_kernel_list[*]}; do
-            echo -e "${INFO} (${x}.${i}) Auto query the latest kernel version of the same series for [ ${vb} - ${KERNEL_VAR} ]"
-            # Identify the kernel mainline
-            MAIN_LINE="$(echo ${KERNEL_VAR} | awk -F '.' '{print $1"."$2}')"
-            # Check the version on the server (e.g LATEST_VERSION="125")
-            LATEST_VERSION="$(curl -s "${server_kernel_url}/${vb}" | grep "name" | grep -oE "${MAIN_LINE}\.[0-9]+" | sed -e "s/${MAIN_LINE}\.//g" | sort -n | sed -n '$p')"
-            if [[ "${?}" -eq "0" && -n "${LATEST_VERSION}" ]]; then
-                tmp_arr_kernels[${i}]="${MAIN_LINE}.${LATEST_VERSION}"
-            else
-                tmp_arr_kernels[${i}]="${KERNEL_VAR}"
-            fi
-            echo -e "${INFO} (${x}.${i}) [ ${vb} - ${tmp_arr_kernels[$i]} ] is latest kernel. \n"
-
-            let i++
-        done
-
-        # Reset the kernel array to the latest kernel version
-        if [[ "${vb}" == "stable" ]]; then
-            unset stable_kernel
-            stable_kernel="${tmp_arr_kernels[*]}"
-        elif [[ "${vb}" == "rk3588" ]]; then
-            unset rk3588_kernel
-            rk3588_kernel="${tmp_arr_kernels[*]}"
-        fi
-        down_kernel_list="${tmp_arr_kernels[*]}"
-
-        # Synchronization related kernel
-        i="1"
-        for KERNEL_VAR in ${down_kernel_list[*]}; do
-            if [[ ! -d "${kernel_path}/${vb}/${KERNEL_VAR}" ]]; then
-                echo -e "${INFO} (${x}.${i}) [ ${vb} - ${KERNEL_VAR} ] Kernel loading from [ ${kernel_repo/trunk/tree\/main}/${vb}/${KERNEL_VAR} ]"
-                svn export ${kernel_repo}/${vb}/${KERNEL_VAR} ${kernel_path}/${vb}/${KERNEL_VAR} --force
-            else
-                echo -e "${INFO} (${x}.${i}) [ ${vb} - ${KERNEL_VAR} ] Kernel is in the local directory."
+        {
+            # Select the corresponding kernel directory and list
+            if [[ "${vb}" == "stable" ]]; then
+                down_kernel_list="${stable_kernel[*]}"
+            elif [[ "${vb}" == "rk3588" ]]; then
+                down_kernel_list="${rk3588_kernel[*]}"
             fi
 
-            let i++
-        done
+            # Set empty array
+            tmp_arr_kernels=()
 
-        let x++
+            # Query the latest kernel in a loop
+            i="1"
+            for KERNEL_VAR in ${down_kernel_list[*]}; do
+                echo -e "${INFO} (${x}.${i}) Auto query the latest kernel version of the same series for [ ${vb} - ${KERNEL_VAR} ]"
+                # Identify the kernel mainline
+                MAIN_LINE="$(echo ${KERNEL_VAR} | awk -F '.' '{print $1"."$2}')"
+                # Check the version on the server (e.g LATEST_VERSION="125")
+                LATEST_VERSION="$(curl -s "${server_kernel_url}/${vb}" | grep "name" | grep -oE "${MAIN_LINE}\.[0-9]+" | sed -e "s/${MAIN_LINE}\.//g" | sort -n | sed -n '$p')"
+                if [[ "${?}" -eq "0" && -n "${LATEST_VERSION}" ]]; then
+                    tmp_arr_kernels[${i}]="${MAIN_LINE}.${LATEST_VERSION}"
+                else
+                    tmp_arr_kernels[${i}]="${KERNEL_VAR}"
+                fi
+                echo -e "${INFO} (${x}.${i}) [ ${vb} - ${tmp_arr_kernels[$i]} ] is latest kernel. \n"
+
+                let i++
+            done
+
+            # Reset the kernel array to the latest kernel version
+            if [[ "${vb}" == "stable" ]]; then
+                unset stable_kernel
+                stable_kernel="${tmp_arr_kernels[*]}"
+            elif [[ "${vb}" == "rk3588" ]]; then
+                unset rk3588_kernel
+                rk3588_kernel="${tmp_arr_kernels[*]}"
+            fi
+
+            let x++
+        }
     done
+}
 
-    sync
+download_kernel() {
+    cd ${make_path}
+
+    x="1"
+    for vb in ${version_branch[*]}; do
+        {
+            # Set a different kernel download list
+            if [[ "${vb}" == "stable" ]]; then
+                down_kernel_list="${stable_kernel[*]}"
+            elif [[ "${vb}" == "rk3588" ]]; then
+                down_kernel_list="${rk3588_kernel[*]}"
+            fi
+
+            i="1"
+            for KERNEL_VAR in ${down_kernel_list[*]}; do
+                {
+                    if [[ ! -d "${kernel_path}/${vb}/${KERNEL_VAR}" ]]; then
+                        echo -e "${INFO} (${x}.${i}) [ ${vb} - ${KERNEL_VAR} ] Kernel loading from [ ${kernel_repo/trunk/tree\/main}/${vb}/${KERNEL_VAR} ]"
+                        svn export ${kernel_repo}/${vb}/${KERNEL_VAR} ${kernel_path}/${vb}/${KERNEL_VAR} --force
+                    else
+                        echo -e "${INFO} (${x}.${i}) [ ${vb} - ${KERNEL_VAR} ] Kernel is in the local directory."
+                    fi
+
+                    let i++
+                }
+            done
+            let x++
+        }
+    done
 }
 
 confirm_version() {
@@ -419,8 +428,6 @@ copy_files() {
 
     # Copy the full Armbian image
     cp -af ${tmp_armbian}/* ${tag_rootfs}
-
-    sync && sleep 3
 }
 
 refactor_files() {
@@ -569,6 +576,8 @@ refactor_files() {
         sed -i "s|^#*Port .*|Port 22|g" ${ssh_config} 2>/dev/null
         sed -i "s|^#*PermitRootLogin .*|PermitRootLogin yes|g" ${ssh_config} 2>/dev/null
     }
+
+    sync && sleep 3
 }
 
 clean_tmp() {
@@ -659,7 +668,8 @@ find_armbian
 # Download the dependency files
 download_depends
 # Download the latest kernel
-[[ "${auto_kernel}" == "true" ]] && download_kernel
+[[ "${auto_kernel}" == "true" ]] && query_version
+download_kernel
 echo -e "${INFO} Armbian Board List: [ $(echo ${build_armbian[*]} | tr "\n" " ") ]"
 echo -e "${INFO} Stable Kernel List: [ $(echo ${stable_kernel[*]} | tr "\n" " ") ]"
 echo -e "${INFO} RK3588 Kernel List: [ $(echo ${rk3588_kernel[*]} | tr "\n" " ") ]"
