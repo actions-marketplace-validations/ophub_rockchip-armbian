@@ -319,7 +319,7 @@ confirm_version() {
     [[ -n "${board_conf}" ]] || error_msg "[ ${board} ] config is missing!"
 
     # 1.ID  2.MODEL  3.SOC  4.FDTFILE  5.BOOTLOADER_IMG  6.MAINLINE_UBOOT  7.KERNEL_BRANCH  8.FAMILY  9.BOARD  10.BUILD
-    MODEL_NAME"$(echo ${board_conf} | awk -F':' '{print $2}')"
+    MODEL_NAME="$(echo ${board_conf} | awk -F':' '{print $2}')"
     SOC="$(echo ${board_conf} | awk -F':' '{print $3}')"
     FDTFILE="$(echo ${board_conf} | awk -F':' '{print $4}')"
     BOOTLOADER_IMG="$(echo ${board_conf} | awk -F':' '{print $5}')"
