@@ -66,12 +66,13 @@ kernel_repo="https://github.com/ophub/kernel/tree/main/pub"
 # Convert kernel library address to svn format
 kernel_repo="${kernel_repo//tree\/main/trunk}"
 version_branch=("stable" "rk3588")
-stable_kernel=("5.10.150" "5.15.75")
+stable_kernel=("6.0.5")
 rk3588_kernel=("5.10.150")
 auto_kernel="true"
 # Set supported board
 build_armbian=(
     "rock5b"
+    "r66s" "r68s"
     "beikeyun" "l1pro"
 )
 # Set Armbian firmware size (Unit: MiB, SKIP_MB >= 4, BOOT_MB >= 256, ROOT_MB >= 2048)
@@ -318,6 +319,7 @@ confirm_version() {
     [[ -n "${board_conf}" ]] || error_msg "[ ${board} ] config is missing!"
 
     # 1.ID  2.MODEL  3.SOC  4.FDTFILE  5.BOOTLOADER_IMG  6.MAINLINE_UBOOT  7.KERNEL_BRANCH  8.FAMILY  9.BOARD  10.BUILD
+    MODEL_NAME"$(echo ${board_conf} | awk -F':' '{print $2}')"
     SOC="$(echo ${board_conf} | awk -F':' '{print $3}')"
     FDTFILE="$(echo ${board_conf} | awk -F':' '{print $4}')"
     BOOTLOADER_IMG="$(echo ${board_conf} | awk -F':' '{print $5}')"
@@ -531,6 +533,7 @@ refactor_files() {
     # Add custom firmware information
     echo "PLATFORM='rockchip'" >>${ophub_release_file} 2>/dev/null
     echo "SOC='${SOC}'" >>${ophub_release_file} 2>/dev/null
+    echo "MODEL_NAME='${MODEL_NAME}'" >>${ophub_release_file} 2>/dev/null
     echo "FDTFILE='${FDTFILE}'" >>${ophub_release_file} 2>/dev/null
     echo "BOOTLOADER_IMG='/usr/lib/u-boot/${BOOTLOADER_IMG}'" >>${ophub_release_file} 2>/dev/null
     echo "MAINLINE_UBOOT='/usr/lib/u-boot/${MAINLINE_UBOOT}'" >>${ophub_release_file} 2>/dev/null
@@ -551,7 +554,7 @@ refactor_files() {
     sed -i "s|LABEL=BOOT.*|UUID=${BOOT_UUID}      /boot  ext4            defaults         0 2|g" etc/fstab 2>/dev/null
 
     # Custom banner name
-    sed -i "s|BOARD_NAME=.*|BOARD_NAME=\"${SOC}\"|g" ${armbian_release_file} 2>/dev/null
+    sed -i "s|BOARD_NAME=.*|BOARD_NAME=\"${MODEL_NAME}\"|g" ${armbian_release_file} 2>/dev/null
 
     # Make the .bashrc take effect, Default shell settings file: /etc/default/useradd
     echo '[[ "${SHELL}" == *bash && -f "${HOME}/.bashrc" ]] && . ${HOME}/.bashrc' >>etc/profile

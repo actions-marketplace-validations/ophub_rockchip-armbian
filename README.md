@@ -2,7 +2,7 @@
 
 View Chinese description  |  [查看中文说明](README.cn.md)
 
-Currently `Radxa 5B`, `beikeyun`, `l1pro` and other devices are supported, using [unifreq's](https://github.com/unifreq) enhanced version of bootloader and the latest kernel, More applications and services in [amlogic-s9xxx-armbian](https://github.com/ophub/amlogic-s9xxx-armbian) have been added, which can be written to `TF/USB/eMMC/NVME` for use.
+Currently `Radxa 5B`, `FastRhino-R66S/R68S`, `beikeyun`, `l1pro` and other devices are supported, using [unifreq's](https://github.com/unifreq) enhanced version of bootloader and the latest kernel, More applications and services in [amlogic-s9xxx-armbian](https://github.com/ophub/amlogic-s9xxx-armbian) have been added, which can be written to `TF/USB/eMMC/NVME` for use.
 
 The latest version of the Armbian firmware can be downloaded in [Releases](https://github.com/ophub/rockchip-armbian/releases).
 
@@ -11,6 +11,7 @@ The latest version of the Armbian firmware can be downloaded in [Releases](https
 | SoC  | Device | [Optional kernel](https://github.com/ophub/kernel/tree/main/pub) | Armbian Firmware |
 | ---- | ---- | ---- | ---- |
 | rk3588 | [Radxa-Rock5B](https://wiki.radxa.com/Rock5/5b) | [rk3588](https://github.com/ophub/kernel/tree/main/pub/rk3588) | armbian_rockchip_rock5b.img |
+| rk3568 | [FastRhino-R66S](https://r68s.cn/), [FastRhino-R68S](https://r68s.cn/) | [6.0.y](https://github.com/ophub/kernel/tree/main/pub/stable) | armbian_rockchip_r66s.img <br />armbian_rockchip_r68s.img |
 | rk3328 | [beikeyun](https://www.cnblogs.com/milton/p/15391525.html), [l1pro](https://post.smzdm.com/p/a4wkdo7l/) | [stable](https://github.com/ophub/kernel/tree/main/pub/stable) | armbian_rockchip_beikeyun.img <br />armbian_rockchip_l1pro.img |
 
 💡Tip: Find the firmware matching the device name in the download list. For example, the firmware of Radxa-Rock5B is Armian_x_rock5b_x.img.gz
@@ -43,7 +44,7 @@ Login in to armbian → input command:
 armbian-update
 ```
 
-If there is a set of kernel files in the current directory, it will be updated with the kernel in the current directory (The 4 kernel files required for the update are `header-xxx.tar.gz`, `boot-xxx.tar.gz`, `dtb-rockchip-xxx.tar.gz`, `modules-xxx.tar.gz`. Other kernel files are not required. If they exist at the same time, it will not affect the update. The system can accurately identify the required kernel files). If there is no kernel file in the current directory, it will query and download the latest kernel of the same series from the server for update. You can also query the [Optional Kernel](https://github.com/ophub/kernel/tree/main/pub) version (The kernels of rk3588 and other series are not common and must be used separately. For example, rock5b can select the kernels in the rk3588 directory. beikeyun/l1pro can select the kernels in the stable directory.) and update the specified version: `armbian-update 5.10.150 stable`. The optional kernel supported by the device can be freely updated, such as from 5.10.150 kernel to 5.15.75 kernel.
+If there is a set of kernel files in the current directory, it will be updated with the kernel in the current directory (The 4 kernel files required for the update are `header-xxx.tar.gz`, `boot-xxx.tar.gz`, `dtb-rockchip-xxx.tar.gz`, `modules-xxx.tar.gz`. Other kernel files are not required. If they exist at the same time, it will not affect the update. The system can accurately identify the required kernel files). If there is no kernel file in the current directory, it will query and download the latest kernel of the same series from the server for update. You can also query the [Optional Kernel](https://github.com/ophub/kernel/tree/main/pub) version (The kernels of rk3588 and other series are not common and must be used separately. For example, rock5b can select the kernels in the rk3588 directory. FastRhino-R66S/R68S/beikeyun/l1pro can select the kernels in the stable directory.) and update the specified version: `armbian-update 5.10.150 stable`. The optional kernel supported by the device can be freely updated, such as from 5.10.150 kernel to 5.15.75 kernel.
 
 - ### More instructions for use
 
