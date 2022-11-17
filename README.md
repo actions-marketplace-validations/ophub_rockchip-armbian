@@ -36,6 +36,7 @@ dd if=armbian.img  of=/dev/<your_device_name>  bs=1M conv=fsync
 
 - ### Update Armbian Kernel
 
+
 Login in to armbian → input command:
 
 ```yaml
@@ -44,7 +45,14 @@ Login in to armbian → input command:
 armbian-update
 ```
 
-If there is a set of kernel files in the current directory, it will be updated with the kernel in the current directory (The 4 kernel files required for the update are `header-xxx.tar.gz`, `boot-xxx.tar.gz`, `dtb-rockchip-xxx.tar.gz`, `modules-xxx.tar.gz`. Other kernel files are not required. If they exist at the same time, it will not affect the update. The system can accurately identify the required kernel files). If there is no kernel file in the current directory, it will query and download the latest kernel of the same series from the server. update the specified version: `armbian-update 5.10.150`
+| Optional  | Default         | Value              | Description                   |
+| -------   | -------------   | -----------------  | ---------------------------   |
+| -k        | auto latest     | [kernel name](https://github.com/ophub/kernel/tree/main/pub/stable)  | Set the kernel name |
+| -v        | stable/rk3588   | stable/rk3588/dev  | Set the kernel version branch |
+
+Example: `armbian-update -k 5.15.50 -v rk3588`
+
+If there is a set of kernel files in the current directory, it will be updated with the kernel in the current directory (The 4 kernel files required for the update are `header-xxx.tar.gz`, `boot-xxx.tar.gz`, `dtb-rockchip-xxx.tar.gz`, `modules-xxx.tar.gz`. Other kernel files are not required. If they exist at the same time, it will not affect the update. The system can accurately identify the required kernel files). If there is no kernel file in the current directory, it will query and download the latest kernel of the same series from the server for update. The optional kernel supported by the device can be freely updated, such as from 5.10.125 kernel to 5.15.50 kernel.
 
 1. `rock5b` can select the kernels in the [rk3588](https://github.com/ophub/kernel/tree/main/pub/rk3588) directory.
 2. `FastRhino-R66S/R68S` can choose the [6.0.y](https://github.com/ophub/kernel/tree/main/pub/stable) kernel in the `stable` directory

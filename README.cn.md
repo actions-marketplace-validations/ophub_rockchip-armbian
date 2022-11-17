@@ -38,12 +38,19 @@ dd if=armbian.img  of=/dev/<your_device_name>  bs=1M conv=fsync
 登录 Armbian 系统 → 输入命令：
 
 ```yaml
-# Run as root user (sudo -i)
-# If no parameter is specified, it will update to the latest version.
+# 使用 root 用户运行 (sudo -i)
+# 如果不指定参数，将更新为最新版本。
 armbian-update
 ```
 
-如果当前目录下有成套的内核文件，将使用当前目录的内核进行更新（更新需要的 4 个内核文件是 `header-xxx.tar.gz`, `boot-xxx.tar.gz`, `dtb-rockchip-xxx.tar.gz`, `modules-xxx.tar.gz`。其他内核文件不需要，如果同时存在也不影响更新，系统可以准确识别需要的内核文件）。如果当前目录没有内核文件，将从服务器查询并下载同系列的最新内核进行更新。进行指定版本更新：`armbian-update 5.10.150`
+| 可选参数  | 默认值           | 选项                | 说明               |
+| -------  | -------------   | ------------------ | ----------------  |
+| -k       | auto latest     | [内核名称](https://github.com/ophub/kernel/tree/main/pub/stable)  | 设置更新内核名称  |
+| -v       | stable/rk3588   | stable/rk3588/dev  | 指定内核版本分支     |
+
+举例: `armbian-update -k 5.15.50 -v rk3588`
+
+如果当前目录下有成套的内核文件，将使用当前目录的内核进行更新（更新需要的 4 个内核文件是 `header-xxx.tar.gz`, `boot-xxx.tar.gz`, `dtb-rockchip-xxx.tar.gz`, `modules-xxx.tar.gz`。其他内核文件不需要，如果同时存在也不影响更新，系统可以准确识别需要的内核文件）。如果当前目录没有内核文件，将从服务器查询并下载同系列的最新内核进行更新。在设备支持的可选内核里可以自由更新，如从 5.10.125 内核更新为 5.15.50 内核。
 
 1. `rock5b` 可以选择 [rk3588](https://github.com/ophub/kernel/tree/main/pub/rk3588) 目录下的内核。
 2. `电犀牛R66S/R68S` 可以选择 `stable` 目录下的 [6.0.y](https://github.com/ophub/kernel/tree/main/pub/stable) 内核。
