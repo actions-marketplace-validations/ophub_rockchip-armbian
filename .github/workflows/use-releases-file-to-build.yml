@@ -89,9 +89,9 @@ jobs:
           armbian_buildpath="build/output/images"
           [[ -d "${armbian_buildpath}" ]] || mkdir -p "${armbian_buildpath}"
           down_repo="https://api.github.com/repos/${GITHUB_REPOSITORY}/releases"
-          down_path="Armbian_rockchip_${{ inputs.set_release }}.*/Tmp_.*.img.gz"
+          down_path="Armbian_rockchip_${{ inputs.set_release }}.*/Armbian_.*-trunk_.*.img.gz"
 
-          # down_filename: Armbian_rockchip_jammy_05.17.1924/Tmp_.*.img.gz
+          # down_filename: Armbian_rockchip_jammy_05.17.1924/Armbian_22.11.0-trunk_5.10.70.img.gz
           down_filename="$(curl -s "${down_repo}" | grep -oE "${down_path}" | head -n 1)"
           down_file="https://github.com/${GITHUB_REPOSITORY}/releases/download/${down_filename}"
           [[ -z "${down_file}" ]] && echo "Invalid download file." && exit 1
