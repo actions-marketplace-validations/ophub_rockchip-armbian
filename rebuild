@@ -44,6 +44,7 @@ armbian_rebuild_file="${armbian_outputpath}/*.img"
 build_path="${make_path}/build-armbian"
 kernel_path="${build_path}/rockchip-kernel"
 uboot_path="${build_path}/u-boot"
+firmware_path="${build_path}/firmware"
 configfiles_path="${build_path}/common-files"
 rockchip_model_conf="${configfiles_path}/rootfs/etc/rockchip_model_database.conf"
 tmp_dir="${make_path}/tmp_dir"
@@ -60,7 +61,7 @@ armbian_release_file="etc/armbian-release"
 # Add custom armbian firmware information
 ophub_release_file="etc/ophub-release"
 # Dependency files download repository
-script_repo="https://github.com/ophub/amlogic-s9xxx-armbian/tree/main/build-armbian/common-files"
+depends_repo="https://github.com/ophub/amlogic-s9xxx-armbian/tree/main/build-armbian"
 # Kernel files download repository
 kernel_repo="https://github.com/ophub/kernel/tree/main/pub"
 # Convert kernel library address to svn format
@@ -206,18 +207,22 @@ download_depends() {
     echo -e "${STEPS} Start downloading dependency files..."
 
     # Convert script library address to svn format
-    if [[ "${script_repo}" == http* && -n "$(echo ${script_repo} | grep "tree/main")" ]]; then
-        script_repo="${script_repo//tree\/main/trunk}"
+    if [[ "${depends_repo}" == http* && -n "$(echo ${depends_repo} | grep "tree/main")" ]]; then
+        depends_repo="${depends_repo//tree\/main/trunk}"
     fi
+
+    # Download generic firmware
+    mkdir -p ${firmware_path}
+    svn export ${depends_repo}/amlogic-armbian/firmware.tar.xz ${firmware_path} --force
 
     # Download software service related files
     mkdir -p ${configfiles_path}/rootfs/usr/share/ophub
-    svn export ${script_repo}/rootfs/usr/share/ophub ${configfiles_path}/rootfs/usr/share/ophub --force
+    svn export ${depends_repo}/common-files/rootfs/usr/share/ophub ${configfiles_path}/rootfs/usr/share/ophub --force
     find ${configfiles_path}/rootfs/usr/share/ophub -type f -name '*.sh' -exec chmod +x {} \;
 
     # Download main service related files
     tmp_depends_dir="$(mktemp -d)"
-    svn export ${script_repo}/rootfs/usr/sbin ${tmp_depends_dir} --force
+    svn export ${depends_repo}/common-files/rootfs/usr/sbin ${tmp_depends_dir} --force
     cp -f ${tmp_depends_dir}/{armbian-ddbr,armbian-docker,armbian-fix,armbian-software,armbian-swap,armbian-tf,balethirq.pl} \
         ${configfiles_path}/rootfs/usr/sbin
     chmod +x ${configfiles_path}/rootfs/usr/sbin/*
@@ -441,6 +446,9 @@ copy_files() {
 refactor_files() {
     process_msg " (4/5) Refactor related files."
     cd ${make_path}
+
+    # Unzip the firmware file
+    tar -xJf "${firmware_path}/firmware.tar.xz" --no-same-owner -C ${tag_rootfs}/usr
 
     # Copy the same files
     [[ "$(ls ${configfiles_path}/bootfs/${board} 2>/dev/null | wc -w)" -ne "0" ]] && cp -rf ${configfiles_path}/bootfs/${board}/* ${tag_bootfs}
