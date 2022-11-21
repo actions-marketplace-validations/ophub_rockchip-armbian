@@ -608,6 +608,15 @@ refactor_files() {
         }
     }
 
+    # Get random macaddr
+    mac_hexchars="0123456789ABCDEF"
+    mac_end="$(for i in {1..6}; do echo -n ${mac_hexchars:$((${RANDOM} % 16)):1}; done | sed -e 's/\(..\)/:\1/g')"
+    random_macaddr="00:20${mac_end}"
+
+    # Set interfaces macaddr
+    interfaces_file="etc/network/interfaces"
+    [[ -f "${interfaces_file}" ]] && sed -i "s|hwaddress ether.*|hwaddress ether ${random_macaddr}:AA|g" ${interfaces_file}
+
     sync && sleep 3
 }
 
