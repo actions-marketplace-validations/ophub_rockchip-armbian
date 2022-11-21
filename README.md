@@ -2,7 +2,7 @@
 
 View Chinese description  |  [查看中文说明](README.cn.md)
 
-Currently `Radxa 5B`, `FastRhino-R66S/R68S`, `beikeyun`, `l1pro` and other devices are supported, using [unifreq's](https://github.com/unifreq) enhanced version of bootloader and the latest kernel, More applications and services in [amlogic-s9xxx-armbian](https://github.com/ophub/amlogic-s9xxx-armbian) have been added, which can be written to `TF/USB/eMMC/NVME` for use.
+Currently `Radxa 5B`, `FastRhino-R66S/R68S`, `beikeyun`, `l1pro` and other devices are supported, using [unifreq's](https://github.com/unifreq) enhanced version of bootloader and the latest kernel, More applications and services in [amlogic-s9xxx-armbian](https://github.com/ophub/amlogic-s9xxx-armbian) have been added, which can be written to `TF/USB/eMMC/NVME` for use. Please refer to [armbian-docs](build-armbian/armbian-docs/) for usage.
 
 The latest version of the Armbian firmware can be downloaded in [Releases](https://github.com/ophub/rockchip-armbian/releases).
 

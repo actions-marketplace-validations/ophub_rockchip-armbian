@@ -2,7 +2,7 @@
 
 查看英文说明 | [View English description](README.md)
 
-当前支持 `瑞莎 Rock5b`，`电犀牛R66S/R68S`， `贝壳云`，`我家云` 等设备，使用 [unifreq's](https://github.com/unifreq) 的加强版 bootloader 和最新版本的内核进行了重制。添加了在 [amlogic-s9xxx-armbian](https://github.com/ophub/amlogic-s9xxx-armbian) 项目中开发的更多应用和服务，支持写入 `TF/USB/eMMC/NVME` 中使用。
+当前支持 `瑞莎 Rock5b`，`电犀牛R66S/R68S`， `贝壳云`，`我家云` 等设备，使用 [unifreq's](https://github.com/unifreq) 的加强版 bootloader 和最新版本的内核进行了重制。添加了在 [amlogic-s9xxx-armbian](https://github.com/ophub/amlogic-s9xxx-armbian) 项目中开发的更多应用和服务，支持写入 `TF/USB/eMMC/NVME` 中使用。使用方法请查看[说明文档](build-armbian/armbian-docs/)。
 
 最新版固件可以在 [Releases](https://github.com/ophub/rockchip-armbian/releases) 中下载。
 
