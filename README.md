@@ -22,20 +22,9 @@ Write the IMG file to the USB/TF hard disk through software such as [Rufus](http
 
 - ### Install Armbian
 
-Login in to armbian (default user: root, default password: 1234) → Upload the Armbian image → input command:
-
-```yaml
-dd if=armbian.img  of=/dev/<your_device_name>  bs=1M conv=fsync
-
-# For example, the write command in NVME is:
-# dd if=armbian.img  of=/dev/nvme0n1  bs=1M conv=fsync
-```
-
-💡Tip: If `Radxa 5B` uses the Armbian system in `NVME` or `USB`, you must use [the spi bootloader files downloaded here](build-armbian/u-boot/rock5b). Please refer to the official website for [the brushing method](https://wiki.radxa.com/Rock5/install/spi).
-
+The installation method is different for different devices, please check [documentation](build-armbian/armbian-docs/).
 
 - ### Update Armbian Kernel
-
 
 Login in to armbian → input command:
 

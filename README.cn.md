@@ -22,16 +22,7 @@
 
 - ### 安装 Armbian
 
-登录 Armbian 系统 (默认用户: root, 默认密码: 1234) → 上传 Armbian 镜像 → 输入命令：
-
-```yaml
-dd if=armbian.img  of=/dev/<your_device_name>  bs=1M conv=fsync
-
-# 例如，写入 NVME 的命令:
-# dd if=armbian.img  of=/dev/nvme0n1  bs=1M conv=fsync
-```
-
-💡提示：`瑞莎 Rock5b` 如果在 `NVME` 或 `USB` 中使用 Armbian 系统，必须下载这里提供的 [spi bootloader](build-armbian/u-boot/rock5b) 文件。[刷写方法](https://wiki.radxa.com/Rock5/install/spi)参照官方的说明。
+不同设备的安装方法不同，请查看[说明文档](build-armbian/armbian-docs/)。
 
 - ### 更新 Armbian 内核
 
