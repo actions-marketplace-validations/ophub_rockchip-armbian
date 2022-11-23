@@ -86,7 +86,8 @@ Use tools such as Rufus or balenaEtcher to write the Armbian system image into t
 
 - Download the [RKDevTool](https://github.com/ophub/kernel/releases/download/tools/FastRhino_r68s_RKDevTool_Release_v2.86___DriverAssitant_v5.1.1.tar.gz) tool and driver, decompress and install the DriverAssistant driver, and open the RKDevTool tool for standby.
 - When the R68s is powered off, first insert the USB dual male cable, then press and hold the Recovery key and plug in the 12V power supply. After two seconds, release the Recovery key, and the brushing tool will `find a LOADER device`.
-- Right click the blank space of the RKDevTool tool operation interface to add an item. The address is `0x00000000` and the name is `armbian`. Click the path on the right to select `armbian.img` system files.
+- Right click the blank space of the RKDevTool tool operation interface to add an item.
+- The address is `0x00000000` and the name is `armbian`. Click the path on the right to select `armbian.img` system files.
 - Select an additional armbian line, deselect other lines, and click `Run` Write.
 
 <div style="width:100%;margin-top:40px;margin:5px;">
@@ -105,12 +106,24 @@ Method reproduced from milton's [tutorial](https://www.cnblogs.com/milton/p/1539
 <img src=https://user-images.githubusercontent.com/68696949/202977900-50b4770d-8444-42a0-8478-3234043455bd.png width="600" />
 </div>
 
-Open the RKDevTool flashing tool, right-click to add an item. Address `0xCCCCCCCC`, name `Boot`, path [select](https://github.com/ophub/rockchip-armbian/tree/main/build-armbian/u-boot/beikeyun) `rk3328_loader_v1.14.249.bin`. Address `0x00000000`, name `system`, path select `Armbian.img` firmware. Click to execute the write.
+Open the RKDevTool flashing tool, right-click to add an item.
+
+- Address `0xCCCCCCCC`, name `Boot`, path [select](https://github.com/ophub/rockchip-armbian/tree/main/build-armbian/u-boot/beikeyun) `rk3328_loader_v1.14.249.bin`.
+- Address `0x00000000`, name `system`, path select `Armbian.img` firmware.
+
+Click to execute the write.
 
 
 ### 1.5 Installation method of l1pro
 
-Method reproduced from cc747's [tutorial](https://post.smzdm.com/p/a4wkdo7l/). Flashing needs to enter Maskrom mode. Make l1pro power off and unplug all cables. Use a USB double-male cable, plug one end into the USB2.0 port of l1pro, and plug the other end into the computer. Insert a paper clip into the Reset hole and press it down firmly. Plug in the power cord. Wait for a few seconds until `Found a LOADER device` appears at the bottom of the RKDevTool box before releasing the paperclip. Switch RKDevTool to `Advanced Functions` and click the `Enter Maskrom` button, prompting `Found a MASKROM device`. Right click to add item. Address `0xCCCCCCCC`, name `Boot`, path [select](https://github.com/ophub/rockchip-armbian/tree/main/build-armbian/u-boot/l1pro) `rk3328_loader.bin`. Address `0x00000000`, name `system`, path to select the `Armbian.img` firmware to flash. Click to execute the write.
+Method reproduced from cc747's [tutorial](https://post.smzdm.com/p/a4wkdo7l/). Flashing needs to enter Maskrom mode. Make l1pro power off and unplug all cables. Use a USB double-male cable, plug one end into the USB2.0 port of l1pro, and plug the other end into the computer. Insert a paper clip into the Reset hole and press it down firmly. Plug in the power cord. Wait for a few seconds until `Found a LOADER device` appears at the bottom of the RKDevTool box before releasing the paperclip. Switch RKDevTool to `Advanced Functions` and click the `Enter Maskrom` button, prompting `Found a MASKROM device`.
+
+Right click to add item.
+
+- Address `0xCCCCCCCC`, name `Boot`, path [select](https://github.com/ophub/rockchip-armbian/tree/main/build-armbian/u-boot/l1pro) `rk3328_loader.bin`.
+- Address `0x00000000`, name `system`, path to select the `Armbian.img` firmware to flash.
+
+Click to execute the write.
 
 ## 2. Update Armbian Kernel
 

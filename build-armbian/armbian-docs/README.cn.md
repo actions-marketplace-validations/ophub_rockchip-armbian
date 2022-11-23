@@ -85,7 +85,8 @@ dd if=armbian.img  of=/dev/nvme0n1  bs=1M status=progress
 
 - 下载 [RKDevTool](https://github.com/ophub/kernel/releases/download/tools/FastRhino_r68s_RKDevTool_Release_v2.86___DriverAssitant_v5.1.1.tar.gz) 工具及驱动，解压并安装 DriverAssitant 驱动程序，打开 RKDevTool 工具备用。
 - R68s 在关机状态下，先插入 USB 双公头线，然后按住 Recovery 键并插上 12V 电源，两秒之后松开 Recovery 键，刷机工具会`发现一个 LOADER 设备`。
-- 在 RKDevTool 工具操作界面的空白处点右键，添加项，地址是 `0x00000000`，名字是 `armbian`，路径点击右侧选择 `armbian.img` 系统文件。
+- 在 RKDevTool 工具操作界面的空白处点右键，添加项。
+- 地址是 `0x00000000`，名字是 `armbian`，路径点击右侧选择 `armbian.img` 系统文件。
 - 选择添加的 armbian 一行外，取消其他行的选择，点击执行写入即可。
 
 <div style="width:100%;margin-top:40px;margin:5px;">
@@ -104,11 +105,21 @@ dd if=armbian.img  of=/dev/nvme0n1  bs=1M status=progress
 <img src=https://user-images.githubusercontent.com/68696949/202977900-50b4770d-8444-42a0-8478-3234043455bd.png width="600" />
 </div>
 
-打开 RKDevTool 刷机工具，右键添加项。地址 `0xCCCCCCCC`, 名字 `Boot`, 路径[选择](https://github.com/ophub/rockchip-armbian/tree/main/build-armbian/u-boot/beikeyun) `rk3328_loader_v1.14.249.bin`。地址 `0x00000000`, 名字 `system`, 路径选择要刷的 `Armbian.img` 固件。点击执行写入即可。
+打开 RKDevTool 刷机工具，右键添加项。
+
+- 地址 `0xCCCCCCCC`, 名字 `Boot`, 路径[选择](https://github.com/ophub/rockchip-armbian/tree/main/build-armbian/u-boot/beikeyun) `rk3328_loader_v1.14.249.bin`。
+- 地址 `0x00000000`, 名字 `system`, 路径选择要刷的 `Armbian.img` 固件。
+
+点击执行写入即可。
 
 ### 1.5 我家云的安装方法
 
-方法转载自 [cc747](https://post.smzdm.com/p/a4wkdo7l/) 的教程。刷机需要进入 Maskrom 模式。使我家云处于断电状态，拔掉所有线。用 USB 双公头线，一头插入我家云的 USB2.0 接口，一头插入电脑。用回形针插进 Reset 孔，并按压住不松开。插入电源线。等待几秒钟，直到 RKDevTool 框的下方出现`发现一个LOADER设备`后才松开回形针。将 RKDevTool 切换到`高级功能`点击`进入Maskrom`按钮，提示`发现一个MASKROM设备`。右键添加项。地址 `0xCCCCCCCC`, 名字 `Boot`, 路径[选择](https://github.com/ophub/rockchip-armbian/tree/main/build-armbian/u-boot/l1pro) `rk3328_loader.bin`。地址 `0x00000000`, 名字 `system`, 路径选择要刷的 `Armbian.img` 固件。点击执行写入即可。
+方法转载自 [cc747](https://post.smzdm.com/p/a4wkdo7l/) 的教程。刷机需要进入 Maskrom 模式。使我家云处于断电状态，拔掉所有线。用 USB 双公头线，一头插入我家云的 USB2.0 接口，一头插入电脑。用回形针插进 Reset 孔，并按压住不松开。插入电源线。等待几秒钟，直到 RKDevTool 框的下方出现`发现一个LOADER设备`后才松开回形针。将 RKDevTool 切换到`高级功能`点击`进入Maskrom`按钮，提示`发现一个MASKROM设备`。右键添加项。
+
+- 地址 `0xCCCCCCCC`, 名字 `Boot`, 路径[选择](https://github.com/ophub/rockchip-armbian/tree/main/build-armbian/u-boot/l1pro) `rk3328_loader.bin`。
+- 地址 `0x00000000`, 名字 `system`, 路径选择要刷的 `Armbian.img` 固件。
+
+点击执行写入即可。
 
 
 ## 2. 更新 Armbian 内核
